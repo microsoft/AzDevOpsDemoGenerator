@@ -18,6 +18,7 @@ namespace RestAPI
         public string _mediaType { get; set; }
         public string _scheme { get; set; }
         public string userName { get; set; }
+        public string _adoAuthScheme { get; set; }
     }
     public class ProjectConfigurations
     {

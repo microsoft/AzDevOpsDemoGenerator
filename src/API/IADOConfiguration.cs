@@ -11,6 +11,8 @@ namespace RestAPI
         string VersionNumber { get; set; }
         string Id { get; set; }
         string Team { get; set; }
+        public string _adoAuthScheme { get; set; }
+
 
         string _gitbaseAddress { get; set; }
         string _mediaType { get; set; }
