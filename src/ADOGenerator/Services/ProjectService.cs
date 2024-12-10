@@ -42,6 +42,7 @@ namespace ADOGenerator.Services
         public bool isDefaultRepoTodetele = true;
         public string websiteUrl = string.Empty;
         public string templateUsed = string.Empty;
+        private string adoAuthScheme = string.Empty;
         private static string projectName = string.Empty;
         private static AccessDetails AccessDetails = new AccessDetails();
 
@@ -95,7 +96,7 @@ namespace ADOGenerator.Services
         /// <param name="accountName"></param>
         /// <returns></returns>
         //public string[] CreateProjectEnvironment(string accountName, string newProjectName, string token, string templateFolder, string templateUsed)
-        public string[] CreateProjectEnvironment(Project model)
+        public bool CreateProjectEnvironment(Project model)
         {
             string pat = model.accessToken;
             templateUsed = model.selectedTemplateFolder;
@@ -141,6 +142,8 @@ namespace ADOGenerator.Services
             model.accountUsersForWi = new List<string>();
             websiteUrl = model.websiteUrl;
             projectName = model.ProjectName;
+            adoAuthScheme = model.adoAuthScheme;
+
 
             if (appSettings["AppSettings:LogWIT"] == "true")
             {
@@ -151,44 +154,44 @@ namespace ADOGenerator.Services
                 var objIssue = new IssueWI();
                 objIssue.CreateReportWI(patBase64, "4.1", url, websiteUrl, reportName, "", templateUsed, projectId, model.Region);
             }
-            
-            ADOConfiguration _gitHubConfig = new ADOConfiguration() { _gitbaseAddress = gitHubBaseAddress, _gitcredential = model.GitHubToken, _mediaType = "application/json", _scheme = "Bearer" };
 
-            if (model.GitHubFork && model.GitHubToken != null)
-            {
-                GitHubImportRepo gitHubImport = new GitHubImportRepo(_gitHubConfig);
-                HttpResponseMessage userResponse = gitHubImport.GetUserDetail();
-                GitHubUserDetail userDetail = new GitHubUserDetail();
-                if (userResponse.IsSuccessStatusCode)
-                {
-                    userDetail = JsonConvert.DeserializeObject<GitHubUserDetail>(userResponse.Content.ReadAsStringAsync().Result);
-                    _gitHubConfig.userName = userDetail.login;
-                    model.GitHubUserName = userDetail.login;
-                }
-            }
+            //ADOConfiguration _gitHubConfig = new ADOConfiguration() { _gitbaseAddress = gitHubBaseAddress, _gitcredential = model.GitHubToken, _mediaType = "application/json", _scheme = "Bearer" };
+
+            //if (model.GitHubFork && model.GitHubToken != null)
+            //{
+            //    GitHubImportRepo gitHubImport = new GitHubImportRepo(_gitHubConfig);
+            //    HttpResponseMessage userResponse = gitHubImport.GetUserDetail();
+            //    GitHubUserDetail userDetail = new GitHubUserDetail();
+            //    if (userResponse.IsSuccessStatusCode)
+            //    {
+            //        userDetail = JsonConvert.DeserializeObject<GitHubUserDetail>(userResponse.Content.ReadAsStringAsync().Result);
+            //        _gitHubConfig.userName = userDetail.login;
+            //        model.GitHubUserName = userDetail.login;
+            //    }
+            //}
             //configuration setup
             string _credentials = model.accessToken;
             string baseUri = defaultHost + accountName + "/";
             string releaseUri = releaseHost + accountName + "/";
             string graphUri = graphAPIHost + accountName + "/";
 
-            ADOConfiguration _projectCreationVersion = new ADOConfiguration() { UriString = baseUri, VersionNumber = projectCreationVersion, PersonalAccessToken = pat, Project = model.ProjectName, AccountName = accountName };
-            ADOConfiguration _releaseVersion = new ADOConfiguration() { UriString = releaseUri, VersionNumber = releaseVersion, PersonalAccessToken = pat, Project = model.ProjectName, AccountName = accountName };
-            ADOConfiguration _buildVersion = new ADOConfiguration() { UriString = baseUri, VersionNumber = buildVersion, PersonalAccessToken = pat, Project = model.ProjectName, AccountName = accountName, _gitbaseAddress = gitHubBaseAddress, _gitcredential = model.GitHubToken };
-            ADOConfiguration _workItemsVersion = new ADOConfiguration() { UriString = baseUri, VersionNumber = workItemsVersion, PersonalAccessToken = pat, Project = model.ProjectName, AccountName = accountName };
-            ADOConfiguration _queriesVersion = new ADOConfiguration() { UriString = baseUri, VersionNumber = queriesVersion, PersonalAccessToken = pat, Project = model.ProjectName, AccountName = accountName };
-            ADOConfiguration _boardVersion = new ADOConfiguration() { UriString = baseUri, VersionNumber = boardVersion, PersonalAccessToken = pat, Project = model.ProjectName, AccountName = accountName };
-            ADOConfiguration _wikiVersion = new ADOConfiguration() { UriString = baseUri, VersionNumber = wikiVersion, PersonalAccessToken = pat, Project = model.ProjectName, AccountName = accountName };
-            ADOConfiguration _endPointVersion = new ADOConfiguration() { UriString = baseUri, VersionNumber = endPointVersion, PersonalAccessToken = pat, Project = model.ProjectName, AccountName = accountName, _gitbaseAddress = gitHubBaseAddress, _gitcredential = model.GitHubToken };
-            ADOConfiguration _extensionVersion = new ADOConfiguration() { UriString = baseUri, VersionNumber = extensionVersion, PersonalAccessToken = pat, Project = model.ProjectName, AccountName = accountName };
-            ADOConfiguration _dashboardVersion = new ADOConfiguration() { UriString = baseUri, VersionNumber = dashboardVersion, PersonalAccessToken = pat, Project = model.ProjectName, AccountName = accountName };
-            ADOConfiguration _repoVersion = new ADOConfiguration() { UriString = baseUri, VersionNumber = repoVersion, PersonalAccessToken = pat, Project = model.ProjectName, AccountName = accountName, _gitbaseAddress = gitHubBaseAddress, _gitcredential = model.GitHubToken };
-            ADOConfiguration _getSourceCodeVersion = new ADOConfiguration() { UriString = baseUri, VersionNumber = getSourceCodeVersion, PersonalAccessToken = pat, Project = model.ProjectName, AccountName = accountName, _gitbaseAddress = gitHubBaseAddress, _gitcredential = model.GitHubToken };
-            ADOConfiguration _agentQueueVersion = new ADOConfiguration() { UriString = baseUri, VersionNumber = agentQueueVersion, PersonalAccessToken = pat, Project = model.ProjectName, AccountName = accountName };
-            ADOConfiguration _testPlanVersion = new ADOConfiguration() { UriString = baseUri, VersionNumber = testPlanVersion, PersonalAccessToken = pat, Project = model.ProjectName, AccountName = accountName };
-            ADOConfiguration _deploymentGroup = new ADOConfiguration() { UriString = baseUri, VersionNumber = deploymentGroup, PersonalAccessToken = pat, Project = model.ProjectName, AccountName = accountName };
-            ADOConfiguration _graphApiVersion = new ADOConfiguration() { UriString = graphUri, VersionNumber = graphApiVersion, PersonalAccessToken = pat, Project = model.ProjectName, AccountName = accountName };
-            ADOConfiguration _variableGroupApiVersion = new ADOConfiguration() { UriString = baseUri, VersionNumber = variableGroupsApiVersion, PersonalAccessToken = pat, Project = model.ProjectName, AccountName = accountName };
+            ADOConfiguration _projectCreationVersion = new ADOConfiguration() { UriString = baseUri, VersionNumber = projectCreationVersion, PersonalAccessToken = pat, Project = model.ProjectName, AccountName = accountName, _adoAuthScheme = adoAuthScheme };
+            ADOConfiguration _releaseVersion = new ADOConfiguration() { UriString = releaseUri, VersionNumber = releaseVersion, PersonalAccessToken = pat, Project = model.ProjectName, AccountName = accountName, _adoAuthScheme = adoAuthScheme };
+            ADOConfiguration _buildVersion = new ADOConfiguration() { UriString = baseUri, VersionNumber = buildVersion, PersonalAccessToken = pat, Project = model.ProjectName, AccountName = accountName, _gitbaseAddress = gitHubBaseAddress, _gitcredential = model.GitHubToken, _adoAuthScheme = adoAuthScheme };
+            ADOConfiguration _workItemsVersion = new ADOConfiguration() { UriString = baseUri, VersionNumber = workItemsVersion, PersonalAccessToken = pat, Project = model.ProjectName, AccountName = accountName, _adoAuthScheme = adoAuthScheme };
+            ADOConfiguration _queriesVersion = new ADOConfiguration() { UriString = baseUri, VersionNumber = queriesVersion, PersonalAccessToken = pat, Project = model.ProjectName, AccountName = accountName, _adoAuthScheme = adoAuthScheme };
+            ADOConfiguration _boardVersion = new ADOConfiguration() { UriString = baseUri, VersionNumber = boardVersion, PersonalAccessToken = pat, Project = model.ProjectName, AccountName = accountName, _adoAuthScheme = adoAuthScheme };
+            ADOConfiguration _wikiVersion = new ADOConfiguration() { UriString = baseUri, VersionNumber = wikiVersion, PersonalAccessToken = pat, Project = model.ProjectName, AccountName = accountName, _adoAuthScheme = adoAuthScheme };
+            ADOConfiguration _endPointVersion = new ADOConfiguration() { UriString = baseUri, VersionNumber = endPointVersion, PersonalAccessToken = pat, Project = model.ProjectName, AccountName = accountName, _gitbaseAddress = gitHubBaseAddress, _gitcredential = model.GitHubToken, _adoAuthScheme = adoAuthScheme };
+            ADOConfiguration _extensionVersion = new ADOConfiguration() { UriString = baseUri, VersionNumber = extensionVersion, PersonalAccessToken = pat, Project = model.ProjectName, AccountName = accountName, _adoAuthScheme = adoAuthScheme };
+            ADOConfiguration _dashboardVersion = new ADOConfiguration() { UriString = baseUri, VersionNumber = dashboardVersion, PersonalAccessToken = pat, Project = model.ProjectName, AccountName = accountName, _adoAuthScheme = adoAuthScheme };
+            ADOConfiguration _repoVersion = new ADOConfiguration() { UriString = baseUri, VersionNumber = repoVersion, PersonalAccessToken = pat, Project = model.ProjectName, AccountName = accountName, _gitbaseAddress = gitHubBaseAddress, _gitcredential = model.GitHubToken, _adoAuthScheme = adoAuthScheme };
+            ADOConfiguration _getSourceCodeVersion = new ADOConfiguration() { UriString = baseUri, VersionNumber = getSourceCodeVersion, PersonalAccessToken = pat, Project = model.ProjectName, AccountName = accountName, _gitbaseAddress = gitHubBaseAddress, _gitcredential = model.GitHubToken, _adoAuthScheme = adoAuthScheme };
+            ADOConfiguration _agentQueueVersion = new ADOConfiguration() { UriString = baseUri, VersionNumber = agentQueueVersion, PersonalAccessToken = pat, Project = model.ProjectName, AccountName = accountName, _adoAuthScheme = adoAuthScheme };
+            ADOConfiguration _testPlanVersion = new ADOConfiguration() { UriString = baseUri, VersionNumber = testPlanVersion, PersonalAccessToken = pat, Project = model.ProjectName, AccountName = accountName, _adoAuthScheme = adoAuthScheme };
+            ADOConfiguration _deploymentGroup = new ADOConfiguration() { UriString = baseUri, VersionNumber = deploymentGroup, PersonalAccessToken = pat, Project = model.ProjectName, AccountName = accountName, _adoAuthScheme = adoAuthScheme };
+            ADOConfiguration _graphApiVersion = new ADOConfiguration() { UriString = graphUri, VersionNumber = graphApiVersion, PersonalAccessToken = pat, Project = model.ProjectName, AccountName = accountName, _adoAuthScheme = adoAuthScheme };
+            ADOConfiguration _variableGroupApiVersion = new ADOConfiguration() { UriString = baseUri, VersionNumber = variableGroupsApiVersion, PersonalAccessToken = pat, Project = model.ProjectName, AccountName = accountName, _adoAuthScheme = adoAuthScheme };
 
             string projTemplateFile = GetJsonFilePath(model.IsPrivatePath, model.PrivateTemplatePath, templateUsed, "ProjectTemplate.json");
             ProjectSetting setting = null;
@@ -239,7 +242,7 @@ namespace ADOGenerator.Services
                             else
                             {
                                 model.id.ErrorId().AddMessage("Could not recognize process template. Make sure that the exported project template is belog to standard process template or project setting file has valid process template id.");
-                                return new string[] { model.id, accountName, templateUsed };
+                                return false;
                             }
                         }
                         else
@@ -253,7 +256,7 @@ namespace ADOGenerator.Services
                 {
                     Console.WriteLine("Project Templates not found");
                     model.id.ErrorId().AddMessage("Project Templates not found");
-                    return new string[] { model.id, accountName, templateUsed };
+                    return false;
                 }
             }
             catch (Exception ex)
@@ -285,7 +288,7 @@ namespace ADOGenerator.Services
                     }
                 }
                 Thread.Sleep(2000); // Adding Delay to Get Error message
-                return new string[] { model.id, accountName, templateUsed };
+                return false;
             }
             else
             {
@@ -304,7 +307,7 @@ namespace ADOGenerator.Services
                 projectStatus = objProject.GetProjectStateByName(model.ProjectName);
                 if (watch.Elapsed.Minutes >= 5)
                 {
-                    return new string[] { model.id, accountName, templateUsed };
+                    return false;
                 }
             }
             watch.Stop();
@@ -314,13 +317,13 @@ namespace ADOGenerator.Services
             model.Environment.ProjectName = model.ProjectName;
 
             // Fork Repo
-            if (model.GitHubFork && model.GitHubToken != null)
-            {
-                ForkGitHubRepository(model, _gitHubConfig);
-            }
+            //if (model.GitHubFork && model.GitHubToken != null)
+            //{
+            //    ForkGitHubRepository(model, _gitHubConfig);
+            //}
 
             //Install required extensions
-            if (!model.IsApi && model.isExtensionNeeded && model.isAgreeTerms)
+            if (model.isExtensionNeeded && model.isAgreeTerms)
             {
                 bool isInstalled = InstallExtensions(model, model.accountName, model.accessToken);
                 Thread.Sleep(1000);
@@ -341,7 +344,7 @@ namespace ADOGenerator.Services
                 model.Environment.UserUniquename = model.Environment.UserUniquename ?? teamMember.identity.uniqueName;
                 model.Environment.UserUniqueId = model.Environment.UserUniqueId ?? teamMember.identity.id;
             }
-           
+
             //model.Environment.UserUniqueId = model.Email;
             //model.Environment.UserUniquename = model.Email;
             //update board columns and rows
@@ -356,116 +359,116 @@ namespace ADOGenerator.Services
 
             #region setup teams and iterations
             UpdateIterations(model, _boardVersion, "Iterations.json");
-                // for newer version of templates
-                string teamsJsonPath = GetJsonFilePath(model.IsPrivatePath, model.PrivateTemplatePath, templateUsed, "Teams\\Teams.json");
-                if (File.Exists(teamsJsonPath))
+            // for newer version of templates
+            string teamsJsonPath = GetJsonFilePath(model.IsPrivatePath, model.PrivateTemplatePath, templateUsed, "Teams\\Teams.json");
+            if (File.Exists(teamsJsonPath))
+            {
+                template.Teams = "Teams\\Teams.json";
+                template.TeamArea = "TeamArea.json";
+                CreateTeams(model, template.Teams, _projectCreationVersion, model.id, template.TeamArea);
+                string jsonTeams = model.ReadJsonFile(teamsJsonPath);
+                JArray jTeams = JsonConvert.DeserializeObject<JArray>(jsonTeams);
+                JContainer teamsParsed = JsonConvert.DeserializeObject<JContainer>(jsonTeams);
+                _buildVersion.ProjectId = model.Environment.ProjectId;
+                foreach (var jteam in jTeams)
                 {
-                    template.Teams = "Teams\\Teams.json";
-                    template.TeamArea = "TeamArea.json";
-                    CreateTeams(model, template.Teams, _projectCreationVersion, model.id, template.TeamArea);
-                    string jsonTeams = model.ReadJsonFile(teamsJsonPath);
-                    JArray jTeams = JsonConvert.DeserializeObject<JArray>(jsonTeams);
-                    JContainer teamsParsed = JsonConvert.DeserializeObject<JContainer>(jsonTeams);
-                    _buildVersion.ProjectId = model.Environment.ProjectId;
-                    foreach (var jteam in jTeams)
+                    string _teamName = jteam["isDefault"]?.ToString() == "true" ? model.ProjectName + " Team" : jteam["name"].ToString();
+                    string teamFolderPath = GetJsonFilePath(model.IsPrivatePath, model.PrivateTemplatePath, templateUsed, $"Teams\\{jteam["name"]}");
+                    if (Directory.Exists(teamFolderPath))
                     {
-                        string _teamName = jteam["isDefault"]?.ToString() == "true" ? model.ProjectName + " Team" : jteam["name"].ToString();
-                        string teamFolderPath = GetJsonFilePath(model.IsPrivatePath, model.PrivateTemplatePath, templateUsed, $"Teams\\{jteam["name"]}");
-                        if (Directory.Exists(teamFolderPath))
+                        BoardColumn objBoard = new BoardColumn(_boardVersion);
+
+                        // updating swimlanes for each teams each board(epic, feature, PBI, Stories) 
+                        string updateSwimLanesJSON = Path.Combine(teamFolderPath, "BoardRows.json");
+                        if (File.Exists(updateSwimLanesJSON))
                         {
-                            BoardColumn objBoard = new BoardColumn(_boardVersion);
-
-                            // updating swimlanes for each teams each board(epic, feature, PBI, Stories) 
-                            string updateSwimLanesJSON = Path.Combine(teamFolderPath, "BoardRows.json");
-                            if (File.Exists(updateSwimLanesJSON))
+                            updateSwimLanesJSON = File.ReadAllText(updateSwimLanesJSON);
+                            List<ImportBoardRows.Rows> importRows = JsonConvert.DeserializeObject<List<ImportBoardRows.Rows>>(updateSwimLanesJSON);
+                            foreach (var board in importRows)
                             {
-                                updateSwimLanesJSON = File.ReadAllText(updateSwimLanesJSON);
-                                List<ImportBoardRows.Rows> importRows = JsonConvert.DeserializeObject<List<ImportBoardRows.Rows>>(updateSwimLanesJSON);
-                                foreach (var board in importRows)
-                                {
-                                    SwimLanes objSwimLanes = new SwimLanes(_boardVersion);
-                                    objSwimLanes.UpdateSwimLanes(JsonConvert.SerializeObject(board.value), model.ProjectName, board.BoardName, _teamName);
-                                }
-                            }
-
-                            // updating team setting for each team
-                            string teamSettingJson = Path.Combine(teamFolderPath, "TeamSetting.json");
-                            if (File.Exists(teamSettingJson))
-                            {
-                                teamSettingJson = File.ReadAllText(teamSettingJson);
-                                EnableEpic(model, teamSettingJson, _boardVersion, model.id, _teamName);
-                            }
-
-                            // updating board columns for each teams each board
-                            string teamBoardColumns = Path.Combine(teamFolderPath, "BoardColumns.json");
-                            if (File.Exists(teamBoardColumns))
-                            {
-                                teamBoardColumns = File.ReadAllText(teamBoardColumns);
-                                List<ImportBoardColumns.ImportBoardCols> importBoardCols = JsonConvert.DeserializeObject<List<ImportBoardColumns.ImportBoardCols>>(teamBoardColumns);
-                                foreach (var board in importBoardCols)
-                                {
-                                    UpdateBoardColumn(model, JsonConvert.SerializeObject(board.value, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }), _boardVersion, model.id, board.BoardName, _teamName);
-                                }
-                            }
-
-                            // updating card fields for each team and each board
-                            try
-                            {
-                                string teamCardFields = Path.Combine(teamFolderPath, "CardFields.json");
-                                if (File.Exists(teamCardFields))
-                                {
-                                    teamCardFields = File.ReadAllText(teamCardFields);
-                                    List<ImportCardFields.CardFields> cardFields = JsonConvert.DeserializeObject<List<ImportCardFields.CardFields>>(teamCardFields);
-                                    foreach (var card in cardFields)
-                                    {
-                                        UpdateCardFields(model, JsonConvert.SerializeObject(card, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }), _boardVersion, model.id, card.BoardName, _teamName);
-                                    }
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                model.id.ErrorId().AddMessage(ex.Message);
-                            }
-
-                            // updating card styles for each team and each board
-                            string teamCardStyle = Path.Combine(teamFolderPath, "CardStyles.json");
-                            if (File.Exists(teamCardStyle))
-                            {
-                                teamCardStyle = File.ReadAllText(teamCardStyle);
-                                List<CardStyle.Style> cardStyles = JsonConvert.DeserializeObject<List<CardStyle.Style>>(teamCardStyle);
-                                foreach (var cardStyle in cardStyles)
-                                {
-                                    if (cardStyle.rules.fill != null)
-                                    {
-                                        UpdateCardStyles(model, JsonConvert.SerializeObject(cardStyle), _boardVersion, model.id, cardStyle.BoardName, _teamName);
-                                    }
-                                }
-                            }
-
-                            string includeSubArea = Path.Combine(teamFolderPath, "IncludeSubAreas.json");
-                            if (File.Exists(includeSubArea))
-                            {
-                                Teams objTeam = new Teams(_boardVersion);
-                                TeamResponse teamRes = objTeam.GetTeamByName(model.ProjectName, _teamName);
-                                _boardVersion.ProjectId = model.Environment.ProjectId;
-
-                                includeSubArea = File.ReadAllText(includeSubArea);
-                                IncludeSubAreas.Root subAreas = JsonConvert.DeserializeObject<IncludeSubAreas.Root>(includeSubArea);
-
-                                subAreas.defaultValue = model.Environment.ProjectName;
-                                subAreas.values.FirstOrDefault().includeChildren = true;
-                                subAreas.values.FirstOrDefault().value = model.Environment.ProjectName;
-
-                                BoardColumn board = new BoardColumn(_boardVersion);
-                                board.IncludeSubAreas(JsonConvert.SerializeObject(subAreas), _boardVersion, teamRes);
+                                SwimLanes objSwimLanes = new SwimLanes(_boardVersion);
+                                objSwimLanes.UpdateSwimLanes(JsonConvert.SerializeObject(board.value), model.ProjectName, board.BoardName, _teamName);
                             }
                         }
-                    }
-                    model.id.AddMessage("Board-Column, Swimlanes, Styles updated");
-                    UpdateSprintItems(model, _boardVersion, settings);
 
-                    RenameIterations(model, _boardVersion, settings.renameIterations);
+                        // updating team setting for each team
+                        string teamSettingJson = Path.Combine(teamFolderPath, "TeamSetting.json");
+                        if (File.Exists(teamSettingJson))
+                        {
+                            teamSettingJson = File.ReadAllText(teamSettingJson);
+                            EnableEpic(model, teamSettingJson, _boardVersion, model.id, _teamName);
+                        }
+
+                        // updating board columns for each teams each board
+                        string teamBoardColumns = Path.Combine(teamFolderPath, "BoardColumns.json");
+                        if (File.Exists(teamBoardColumns))
+                        {
+                            teamBoardColumns = File.ReadAllText(teamBoardColumns);
+                            List<ImportBoardColumns.ImportBoardCols> importBoardCols = JsonConvert.DeserializeObject<List<ImportBoardColumns.ImportBoardCols>>(teamBoardColumns);
+                            foreach (var board in importBoardCols)
+                            {
+                                UpdateBoardColumn(model, JsonConvert.SerializeObject(board.value, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }), _boardVersion, model.id, board.BoardName, _teamName);
+                            }
+                        }
+
+                        // updating card fields for each team and each board
+                        try
+                        {
+                            string teamCardFields = Path.Combine(teamFolderPath, "CardFields.json");
+                            if (File.Exists(teamCardFields))
+                            {
+                                teamCardFields = File.ReadAllText(teamCardFields);
+                                List<ImportCardFields.CardFields> cardFields = JsonConvert.DeserializeObject<List<ImportCardFields.CardFields>>(teamCardFields);
+                                foreach (var card in cardFields)
+                                {
+                                    UpdateCardFields(model, JsonConvert.SerializeObject(card, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }), _boardVersion, model.id, card.BoardName, _teamName);
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            model.id.ErrorId().AddMessage(ex.Message);
+                        }
+
+                        // updating card styles for each team and each board
+                        string teamCardStyle = Path.Combine(teamFolderPath, "CardStyles.json");
+                        if (File.Exists(teamCardStyle))
+                        {
+                            teamCardStyle = File.ReadAllText(teamCardStyle);
+                            List<CardStyle.Style> cardStyles = JsonConvert.DeserializeObject<List<CardStyle.Style>>(teamCardStyle);
+                            foreach (var cardStyle in cardStyles)
+                            {
+                                if (cardStyle.rules.fill != null)
+                                {
+                                    UpdateCardStyles(model, JsonConvert.SerializeObject(cardStyle), _boardVersion, model.id, cardStyle.BoardName, _teamName);
+                                }
+                            }
+                        }
+
+                        string includeSubArea = Path.Combine(teamFolderPath, "IncludeSubAreas.json");
+                        if (File.Exists(includeSubArea))
+                        {
+                            Teams objTeam = new Teams(_boardVersion);
+                            TeamResponse teamRes = objTeam.GetTeamByName(model.ProjectName, _teamName);
+                            _boardVersion.ProjectId = model.Environment.ProjectId;
+
+                            includeSubArea = File.ReadAllText(includeSubArea);
+                            IncludeSubAreas.Root subAreas = JsonConvert.DeserializeObject<IncludeSubAreas.Root>(includeSubArea);
+
+                            subAreas.defaultValue = model.Environment.ProjectName;
+                            subAreas.values.FirstOrDefault().includeChildren = true;
+                            subAreas.values.FirstOrDefault().value = model.Environment.ProjectName;
+
+                            BoardColumn board = new BoardColumn(_boardVersion);
+                            board.IncludeSubAreas(JsonConvert.SerializeObject(subAreas), _boardVersion, teamRes);
+                        }
+                    }
                 }
+                model.id.AddMessage("Board-Column, Swimlanes, Styles updated");
+                UpdateSprintItems(model, _boardVersion, settings);
+
+                RenameIterations(model, _boardVersion, settings.renameIterations);
+            }
             #endregion
 
 
@@ -499,7 +502,7 @@ namespace ADOGenerator.Services
 
             #endregion
 
-         
+
             #region import source code
             List<string> listImportSourceCodeJsonPaths = new List<string>();
             string importSourceCodePath = GetJsonFilePath(model.IsPrivatePath, model.PrivateTemplatePath, templateUsed, "ImportSourceCode");
@@ -742,7 +745,7 @@ namespace ADOGenerator.Services
                 }
                 model.id.AddMessage("Queries, Widgets and Charts created");
             }
-            return new string[] { model.id, accountName, templateUsed };
+            return true;
         }
 
 

@@ -9,7 +9,7 @@ namespace ADOGenerator.IServices
 
         string GetJsonFilePath(bool IsPrivate, string TemplateFolder, string TemplateName, string FileName = "");
 
-        string[] CreateProjectEnvironment(Project model);
+        bool CreateProjectEnvironment(Project model);
         // string[] CreateProjectEnvironment(string organizationName, string newProjectName, string token, string templateUsed, string templateFolder);
 
         public bool CheckForInstalledExtensions(string extensionJsonFile, string token, string account);

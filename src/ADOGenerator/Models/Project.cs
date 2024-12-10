@@ -56,6 +56,7 @@
         public string PrivateTemplatePath { get; set; }
         public string templateImage { get; set; }
         public string profileImage { get; set; }
+        public string adoAuthScheme { get; set; }
     }
     public class EnvironmentValues
     {
