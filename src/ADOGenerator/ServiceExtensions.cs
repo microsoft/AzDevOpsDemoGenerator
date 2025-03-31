@@ -40,12 +40,20 @@ namespace ADOGenerator
                 string fileName = $"{DateTime.Now.ToString("yyyy-MM-dd")}-{id}.txt";
                 if (id.EndsWith("_Errors"))
                 {
-                    // Create Log file
-                    if (!File.Exists(Path.Combine(logFilePath, "Errors", fileName)))
+                    // Create the Errors folder if it does not exist
+                    string errorsFolderPath = Path.Combine(logFilePath, "Errors");
+                    if (!Directory.Exists(errorsFolderPath))
                     {
-                        File.Create(Path.Combine(logFilePath, "Errors", fileName)).Dispose();
+                        Directory.CreateDirectory(errorsFolderPath);
                     }
-                    File.AppendAllLines(Path.Combine(logFilePath, "Errors", fileName), new string[] { message });
+                    // Create Log file
+                    string errorFilePath = Path.Combine(errorsFolderPath, fileName);
+                    if (!File.Exists(errorFilePath))
+                    {
+                        File.Create(errorFilePath).Dispose();
+                    }
+                    File.AppendAllLines(errorFilePath, new string[] { message });
+
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine(message);
                     Console.ResetColor();

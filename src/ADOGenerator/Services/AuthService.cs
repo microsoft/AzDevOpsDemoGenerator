@@ -34,12 +34,30 @@ namespace ADOGenerator.Services
 
         public async Task<AuthenticationResult> AcquireTokenAsync(IPublicClientApplication app)
         {
-
-            return await app.AcquireTokenWithDeviceCode(scopes, deviceCodeCallback =>
+            AuthenticationResult result = null;
+            try
             {
-                Console.WriteLine(deviceCodeCallback.Message);
-                return Task.CompletedTask;
-            }).ExecuteAsync();
+                result = await app.AcquireTokenWithDeviceCode(scopes, deviceCodeCallback =>
+                {
+                    Console.WriteLine(deviceCodeCallback.Message);
+                    return Task.CompletedTask;
+                }).ExecuteAsync();
+            }
+            catch (MsalServiceException ex)
+            {
+                Console.WriteLine($"MSALServiceException Error: {ex.Message} \nError Code: {ex.ErrorCode}");
+
+            }
+            catch (OperationCanceledException ex)
+            {
+                Console.WriteLine($"OperationCanceledException Error: {ex.Message}");
+            }
+            catch (MsalClientException ex)
+            {
+                Console.WriteLine($"MSALClientException Error: {ex.Message} \nError Code: {ex.ErrorCode}");
+            }
+
+            return result; // Ensure a return value in case of an exception
         }
 
         public async Task<string> GetProfileInfoAsync(string accessToken)
