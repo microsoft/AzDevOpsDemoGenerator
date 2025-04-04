@@ -51,12 +51,12 @@ Ensure you have the following installed on your machine:
 7. **Run the Executable**
    Navigate to the publish directory and run the executable:
    ```sh
-   cd src/ADOGenerator/bin/Release/net8.0/win-x64/publish
-   ./ADOGenerator.exe
+   
    ```
 
 ## Additional Notes
-
+cd src/ADOGenerator/bin/Release/net8.0/win-x64/publish
+   ./ADOGenerator.exe
 - Ensure that any required configuration files (e.g., `appsettings.json`) are present in the output directory.
 - If you encounter any issues, check the console output for error messages and resolve any missing dependencies or configuration issues.
 
