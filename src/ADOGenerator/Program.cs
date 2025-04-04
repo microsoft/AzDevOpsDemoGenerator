@@ -112,10 +112,11 @@ try
                                              .ExecuteAsync();
                         accessToken = result.AccessToken;
                     }
-                    catch (MsalUiRequiredException)
+                    catch (Exception ex)
                     {
                         var result = await authService.AcquireTokenAsync(app);
                         accessToken = result.AccessToken;
+                        id.ErrorId().AddMessage($"Error: {ex.Message}");
                     }
                 }
                 else
@@ -263,6 +264,10 @@ bool ValidateExtensions(string templateFolderPath, string id)
     }
 
     var extensionsFile = File.ReadAllText(extensionsFilePath);
+    if(string.IsNullOrEmpty(extensionsFile))
+    {
+        return false;
+    }
     var extensionjson = JObject.Parse(extensionsFile);
     var extensions = extensionjson["Extensions"];
     if (extensions == null)

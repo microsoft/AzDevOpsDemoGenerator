@@ -1,0 +1,16 @@
+{
+  "data": {
+
+  },
+  "name": "tailspin-spacegame-web-deploy-code",
+  "type": "git",
+  "url": "https://github.com/MicrosoftDocs/mslearn-tailspin-spacegame-web-deploy",
+  "authorization": {
+    "scheme": "UsernamePassword",
+    "parameters": {
+      "username": "$GitUserName$",
+      "password": "$GitUserPassword$"
+    }
+  },
+  "isReady": true
+}

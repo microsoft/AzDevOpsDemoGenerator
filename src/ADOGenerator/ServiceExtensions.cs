@@ -40,6 +40,11 @@ namespace ADOGenerator
                 string fileName = $"{DateTime.Now.ToString("yyyy-MM-dd")}-{id}.txt";
                 if (id.EndsWith("_Errors"))
                 {
+                    // Create Errors Log Directory if not exists
+                    if (!Directory.Exists(Path.Combine(logFilePath, "Errors")))
+                    {
+                        Directory.CreateDirectory(Path.Combine(logFilePath, "Errors"));
+                    }
                     // Create Log file
                     if (!File.Exists(Path.Combine(logFilePath, "Errors", fileName)))
                     {

@@ -1,0 +1,52 @@
+{
+  "triggers": [
+    {
+      "branchFilters": [],
+      "pathFilters": [],
+      "settingsSourceType": 2,
+      "batchChanges": false,
+      "maxConcurrentBuildsPerBranch": 1,
+      "triggerType": "continuousIntegration"
+    }
+  ],
+  "properties": {},
+  "tags": [],
+  "jobAuthorizationScope": "projectCollection",
+  "jobTimeoutInMinutes": 60,
+  "jobCancelTimeoutInMinutes": 5,
+  "process": {
+    "yamlFilename": "azure-pipelines.yml",
+    "type": 2
+  },
+  "repository": {
+    "properties": {
+      "cloneUrl": "https://$Organization$@dev.azure.com/$Organization$/$ProjectName$/_git/tailspin-spacegame-web-deploy",
+      "fullName": "tailspin-spacegame-web-deploy",
+      "defaultBranch": "refs/heads/jmeter",
+      "isFork": "False",
+      "safeRepository": "$tailspin-spacegame-web-deploy$",
+      "reportBuildStatus": "true",
+      "fetchDepth": "1"
+    },
+    "id": "$tailspin-spacegame-web-deploy$",
+    "type": "TfsGit",
+    "name": "tailspin-spacegame-web-deploy",
+    "url": "https://$Organization$@dev.azure.com/$Organization$/$ProjectName$/_git/tailspin-spacegame-web-deploy",
+    "defaultBranch": "refs/heads/jmeter",
+    "clean": null,
+    "checkoutSubmodules": false
+  },
+  "quality": "definition",
+  "drafts": [],
+  "queue": {
+    "id": 8,
+    "name": "Hosted Ubuntu 1604",
+    "pool": {
+      "name": "Hosted Ubuntu 1604",
+      "isHosted": true
+    }
+  },
+  "name": "mslearn-tailspin-spacegame-web-deploy",
+  "type": "build",
+  "queueStatus": "enabled"
+}

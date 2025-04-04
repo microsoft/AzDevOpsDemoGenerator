@@ -1,0 +1,16 @@
+{
+  "data": {
+
+  },
+  "name": "tailspin-spacegame-web-kubernetes-code",
+  "type": "git",
+  "url": "https://github.com/MicrosoftDocs/mslearn-tailspin-spacegame-web-kubernetes",
+  "authorization": {
+    "scheme": "UsernamePassword",
+    "parameters": {
+      "username": "$username$",
+      "password": "$password$"
+    }
+  },
+  "isReady": true
+}

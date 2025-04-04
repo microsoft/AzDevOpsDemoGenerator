@@ -1,0 +1,9 @@
+{
+  "parameters": {
+    "gitSource": {
+      "url": "https://github.com/MicrosoftDocs/mslearn-tailspin-spacegame-web-docker"
+    },
+    "serviceEndpointId": "$tailspin-spacegame-web-docker-code$",
+    "deleteServiceEndpointAfterImportIsDone": true
+  }
+}

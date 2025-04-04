@@ -1,0 +1,9 @@
+{
+  "parameters": {
+    "gitSource": {
+      "url": "https://github.com/jamcneil/mslearn-tailspin-spacegame-web"
+    },
+    "serviceEndpointId": "$tailspin-spacegame-web-code$",
+    "deleteServiceEndpointAfterImportIsDone": true
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "triggers": [
+    {
+      "branchFilters": [],
+      "pathFilters": [],
+      "settingsSourceType": 2,
+      "batchChanges": false,
+      "maxConcurrentBuildsPerBranch": 1,
+      "triggerType": "continuousIntegration"
+    }
+  ],
+  "properties": {},
+  "tags": [],
+  "_links": "{}",
+  "jobAuthorizationScope": "projectCollection",
+  "jobTimeoutInMinutes": 60,
+  "jobCancelTimeoutInMinutes": 5,
+  "badgeEnabled": true,
+  "process": {
+    "yamlFilename": "azure-pipelines.yml",
+    "type": 2
+  },
+  "repository": {
+    "properties": {
+      "cloneUrl": "https://$Organization$@dev.azure.com/$Organization$/$ProjectName$/_git/mslearn-tailspin-spacegame-web-docker",
+      "fullName": "mslearn-tailspin-spacegame-web-docker",
+      "defaultBranch": "refs/heads/main",
+      "isFork": "False",
+      "safeRepository": "$mslearn-tailspin-spacegame-web-docker$",
+      "reportBuildStatus": "true",
+      "fetchDepth": "1"
+    },
+
+    "id": "$mslearn-tailspin-spacegame-web-docker$",
+    "type": "TfsGit",
+    "name": "mslearn-tailspin-spacegame-web-docker",
+    "url": "https://$Organization$@dev.azure.com/$Organization$/$ProjectName$/_git/mslearn-tailspin-spacegame-web-docker",
+    "defaultBranch": "refs/heads/main",
+    "clean": null,
+    "checkoutSubmodules": false
+  },
+  "quality": "definition",
+  "authoredBy": "{}",
+  "drafts": [],
+  "id": "",
+  "name": "mslearn-tailspin-spacegame-web-docker",
+  "url": "",
+  "uri": "",
+  "path": "\\",
+  "type": "build",
+  "queueStatus": "enabled",
+  "revision": 1,
+  "createdDate": "",
+  "project": "{}"
+}
