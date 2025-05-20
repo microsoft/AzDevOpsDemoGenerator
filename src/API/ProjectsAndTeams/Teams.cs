@@ -33,7 +33,8 @@ namespace RestAPI.ProjectsAndTeams
                     if (response.IsSuccessStatusCode)
                     {
                         GetTeamResponse.Team viewModel = new GetTeamResponse.Team();
-                        viewModel = response.Content.ReadFromJsonAsync<GetTeamResponse.Team>().Result;
+                        string responseString = response.Content.ReadAsStringAsync().Result;
+                        viewModel = JsonConvert.DeserializeObject<GetTeamResponse.Team>(responseString);
                         return viewModel;
                     }
                     else
@@ -68,7 +69,8 @@ namespace RestAPI.ProjectsAndTeams
                     if (response.IsSuccessStatusCode)
                     {
                         TeamMemberResponse.TeamMembers viewModel = new TeamMemberResponse.TeamMembers();
-                        viewModel = response.Content.ReadFromJsonAsync<TeamMemberResponse.TeamMembers>().Result;
+                        string responseString = response.Content.ReadAsStringAsync().Result;
+                        viewModel = JsonConvert.DeserializeObject<TeamMemberResponse.TeamMembers>(responseString);
                         return viewModel;
                     }
                     else
@@ -186,7 +188,8 @@ namespace RestAPI.ProjectsAndTeams
                     if (response.IsSuccessStatusCode)
                     {
                         TeamSettingResponse.TeamSetting viewModel = new TeamSettingResponse.TeamSetting();
-                        viewModel = response.Content.ReadFromJsonAsync<TeamSettingResponse.TeamSetting>().Result;
+                        string responseString = response.Content.ReadAsStringAsync().Result;
+                        viewModel = JsonConvert.DeserializeObject<TeamSettingResponse.TeamSetting>(responseString);
                         return viewModel.backlogIteration.id;
                     }
                     else
@@ -257,7 +260,8 @@ namespace RestAPI.ProjectsAndTeams
                     HttpResponseMessage response = client.GetAsync(projectName + "/_apis/wit/classificationnodes?$depth=1&api-version=5.0-preview.2").Result;
                     if (response.IsSuccessStatusCode)
                     {
-                        viewModel = response.Content.ReadFromJsonAsync<TeamIterationsResponse.Iterations>().Result;
+                        string responseString = response.Content.ReadAsStringAsync().Result;
+                        viewModel = JsonConvert.DeserializeObject<TeamIterationsResponse.Iterations>(responseString);
                         return viewModel;
                     }
                     else
@@ -329,7 +333,8 @@ namespace RestAPI.ProjectsAndTeams
                     HttpResponseMessage response = client.GetAsync("_apis/projects/" + projectName + "/teams/" + teamaName + "?api-version=" + _configuration.VersionNumber).Result;
                     if (response.IsSuccessStatusCode)
                     {
-                        viewModel = response.Content.ReadFromJsonAsync<TeamResponse>().Result;
+                        string responseString = response.Content.ReadAsStringAsync().Result;
+                        viewModel = JsonConvert.DeserializeObject<TeamResponse>(responseString);
                         return viewModel;
                     }
                     else

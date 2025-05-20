@@ -43,6 +43,8 @@ namespace ADOGenerator.Services
         public ExtractorService(IConfiguration config)
         {
             _config = config;
+            if (currentPath.EndsWith("ADOGenerator"))
+                currentPath = currentPath + "\\";
         }
         #endregion  STATIC DECLARATIONS
 

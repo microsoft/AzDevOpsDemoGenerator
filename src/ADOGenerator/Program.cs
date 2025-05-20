@@ -23,10 +23,13 @@ string currentPath = Directory.GetCurrentDirectory()
     .Replace("bin\\Debug\\net8.0", "")
     .Replace("bin\\Release\\net8.0", "")
     .Replace("bin\\Debug", "")
-    .Replace("bin\\Release", "");
+    .Replace("bin\\Release", "")
+    .Replace("ADOGenerator\\", "ADOGenerator\\");
 
 do
 {
+    if (currentPath.EndsWith("ADOGenerator"))
+        currentPath = currentPath + "\\";
     string id = Guid.NewGuid().ToString().Split('-')[0];
     Console.ForegroundColor = ConsoleColor.Cyan;
     Console.WriteLine("Do you want to create a new template or create a new project using the demo generator project template?");
@@ -103,24 +106,27 @@ return 0;
 
 void HandleTemplateAndArtifactsUpdate(string template, string id, Project model, string currentPath)
 {
+    var templatePathBin = Path.Combine(Directory.GetCurrentDirectory(), "Templates", "TemplateSetting.json");
+    var templatePathOriginal = Path.Combine(currentPath, "Templates", "TemplateSetting.json");
+    if (UpdateTemplateSettings(template, id, templatePathOriginal))
+    {
+        id.AddMessage(Environment.NewLine + "Template settings updated successfully at " + templatePathOriginal);
+    }
+    else
+    {
+        id.ErrorId().AddMessage(Environment.NewLine + "Template settings update failed at " + templatePathOriginal);
+    }
+    if (templatePathBin.Equals(templatePathOriginal))
+    {
+        id.AddMessage(Environment.NewLine + "Template path is same as original.");
+        return;
+    }
     id.AddMessage(Environment.NewLine+"Do you want to update the template settings and move the artifacts to the executable directory? (yes/no): press enter to confirm");
     var updateTemplateSettings = Console.ReadLine();
-
     if (string.IsNullOrWhiteSpace(updateTemplateSettings) || updateTemplateSettings.Equals("yes", StringComparison.OrdinalIgnoreCase) || updateTemplateSettings.Equals("y", StringComparison.OrdinalIgnoreCase))
     {
         id.AddMessage(Environment.NewLine + "Updating template settings...");
-        var templatePathBin = Path.Combine(Directory.GetCurrentDirectory(), "Templates", "TemplateSetting.json");
-        var templatePathOriginal = Path.Combine(currentPath, "Templates", "TemplateSetting.json");
-
-        if (UpdateTemplateSettings(template, id, templatePathOriginal))
-        {
-            id.AddMessage(Environment.NewLine+"Template settings updated successfully at " + templatePathOriginal);
-        }
-        else
-        {
-            id.ErrorId().AddMessage(Environment.NewLine+"Template settings update failed at " + templatePathOriginal);
-        }
-
+        
         CopyFileIfExists(id,templatePathOriginal, templatePathBin);
 
         id.AddMessage(Environment.NewLine+"Template settings copied to the current directory and updated successfully.");
@@ -128,7 +134,7 @@ void HandleTemplateAndArtifactsUpdate(string template, string id, Project model,
 
         var artifactsPathOriginal = Path.Combine(currentPath, "Templates", $"CT-{model.ProjectName.Replace(" ", "-")}");
         var artifactsPath = Path.Combine(Directory.GetCurrentDirectory(), "Templates", $"CT-{model.ProjectName.Replace(" ", "-")}");
-
+        
         MoveArtifacts(artifactsPathOriginal, artifactsPath, id);
     }
     else
@@ -139,18 +145,26 @@ void HandleTemplateAndArtifactsUpdate(string template, string id, Project model,
 
 void CopyFileIfExists(string id,string sourcePath, string destinationPath)
 {
-    if (File.Exists(sourcePath))
+    try
     {
-        File.Copy(sourcePath, destinationPath, true);
+        if (File.Exists(sourcePath))
+        {
+            File.Copy(sourcePath, destinationPath, true);
+        }
+        else
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            id.AddMessage(Environment.NewLine + $"Source file '{sourcePath}' does not exist. Creating a new file at the destination.");
+            string fileContents = File.ReadAllText(sourcePath);
+            File.WriteAllText(destinationPath, fileContents);
+            id.AddMessage(Environment.NewLine + $"New file created at '{destinationPath}'.");
+            Console.ResetColor();
+        }
     }
-    else
+    catch(Exception ex)
     {
-        Console.ForegroundColor = ConsoleColor.Green;
-        id.AddMessage(Environment.NewLine+$"Source file '{sourcePath}' does not exist. Creating a new file at the destination.");
-        string fileContents = File.ReadAllText(sourcePath);
-        File.WriteAllText(destinationPath, fileContents);
-        id.AddMessage(Environment.NewLine + $"New file created at '{destinationPath}'.");
-        Console.ResetColor();
+        id.ErrorId().AddMessage(Environment.NewLine + "Error copying file: " + ex.Message);
+        return;
     }
 }
 
