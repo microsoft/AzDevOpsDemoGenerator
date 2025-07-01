@@ -1,3 +1,5 @@
+# Running the AzDevOpsDemoGenerator Application
+
 To run the ADOGenerator project as a console application or executable, follow these steps:
 
 ## Prerequisites
@@ -11,12 +13,12 @@ Ensure you have the following installed on your machine:
 1. **Clone the Repository**
    If you haven't already, clone the repository to your local machine:
    ```sh
-   git clone <repository-url>
-   cd <repository-directory>
+   git clone https://github.com/microsoft/AzDevOpsDemoGenerator.git
+   cd AzDevOpsDemoGenerator
    ```
 
 2. **Open the Solution**
-   Open the ADOGenerator.sln solution file in Visual Studio or your preferred IDE.
+   Open the solution file at `src/ADOGenerator.sln` in Visual Studio or your preferred IDE.
 
 3. **Set ADOGenerator as the Startup Project**
    In Visual Studio:
